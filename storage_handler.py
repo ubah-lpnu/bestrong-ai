@@ -1,6 +1,6 @@
 import os
 from azure.storage.fileshare import ShareFileClient
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import BlobServiceClient, ContentSettings
 import logging
 
 class StorageHandler:
@@ -22,17 +22,17 @@ class StorageHandler:
             file.write(download.readall())
         return 
 
-    # def upload_file_to_blob(self, file_name):
+    def upload_file_to_blob(self, file_name):
        
-    #     container_client = self.blob_service_client.get_container_client(self.container_name)
-
-    #     with open(file_name, "rb") as file:
-    #         container_client.upload_blob(
-    #             name=file_name,
-    #             data=file,
-    #             overwrite=True,
-    #             content_settings=ContentSettings(content_type="application/pdf")
-    #         )
+        container_client = self.blob_service_client.get_container_client(self.container_name)
+        with open(file_name, "rb") as file:
+            container_client.upload_blob(
+                name=file_name,
+                data=file,
+                overwrite=True,
+                content_settings=ContentSettings(content_type="application/json")
+            )
+        logging.info(f"File uploaded to Azure Blob Storage successfully.")
 
     def delete_local_files(self, *args):
         for file in args:

@@ -24,9 +24,8 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         storage_handler.download_file_from_share(file_share_name, pdf_file_name)
-        document_ai_handler = DocumentAIHandler()
-        result_json = document_ai_handler.analyze_document(pdf_file_name, output_json)
-        # storage_handler.upload_file_to_blob(pdf_file_name)
+        document_ai_handler.analyze_document(pdf_file_name, output_json)
+        storage_handler.upload_file_to_blob(output_json)
         storage_handler.delete_local_files(pdf_file_name, output_json)
         return func.HttpResponse("PDF file uploaded to Azure Blob Storage successfully.", status_code=200)
 
