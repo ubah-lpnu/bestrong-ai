@@ -1,8 +1,5 @@
 import azure.functions as func
 import logging
-import os
-from azure.storage.fileshare import ShareFileClient
-from azure.storage.blob import BlobServiceClient, ContentSettings
 from storage_handler import StorageHandler
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
@@ -10,8 +7,6 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 file_share_name = "fsbestrongpdf"
 container_name = "bestrong-data"
 storage_handler = StorageHandler(file_share_name, container_name)
-
-
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
