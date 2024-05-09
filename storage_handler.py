@@ -34,7 +34,7 @@ class StorageHandler:
     #             content_settings=ContentSettings(content_type="application/pdf")
     #         )
 
-    def delete_local_file(self, *args):
+    def delete_local_files(self, *args):
         for file in args:
             os.remove(file)
         logging.info("Local files deleted successfully.")
