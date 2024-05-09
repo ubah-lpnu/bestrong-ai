@@ -1,6 +1,7 @@
 import os
 from azure.storage.fileshare import ShareFileClient
-from azure.storage.blob import BlobServiceClient, ContentSettings
+from azure.storage.blob import BlobServiceClient
+import logging
 
 class StorageHandler:
     def __init__(self, file_share_name, container_name):
@@ -33,5 +34,7 @@ class StorageHandler:
     #             content_settings=ContentSettings(content_type="application/pdf")
     #         )
 
-    def delete_local_file(self, file_name):
-        os.remove(file_name)
+    def delete_local_files(self, *args):
+        for file in args:
+            os.remove(file)
+        logging.info("Local files deleted successfully.")

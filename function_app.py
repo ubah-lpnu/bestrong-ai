@@ -1,12 +1,15 @@
 import azure.functions as func
 import logging
 from storage_handler import StorageHandler
+from document_ai_handler import DocumentAIHandler
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 file_share_name = "fsbestrongpdf"
 container_name = "bestrong-data"
+output_json = "bestrong-ai.json"
 storage_handler = StorageHandler(file_share_name, container_name)
+document_ai_handler = DocumentAIHandler()
 
 @app.route(route="http_trigger")
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
@@ -21,9 +24,10 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
 
     try:
         storage_handler.download_file_from_share(file_share_name, pdf_file_name)
-
+        document_ai_handler = DocumentAIHandler()
+        result_json = document_ai_handler.analyze_document(pdf_file_name, output_json)
         # storage_handler.upload_file_to_blob(pdf_file_name)
-        storage_handler.delete_local_file(pdf_file_name)
+        storage_handler.delete_local_files(pdf_file_name, output_json)
         return func.HttpResponse("PDF file uploaded to Azure Blob Storage successfully.", status_code=200)
 
     except Exception as e:
