@@ -3,10 +3,15 @@ trigger:
 - main
 
 variables:
-  azureSubscription: '84c5f8d6-c21b-49e6-8b88-bca28abb3d85'
-  functionAppName: 'ai-bestrong-prod'
-  vmImageName: 'ubuntu-latest'
-  workingDirectory: '.'
+  - group: settings
+  - name: azureSubscription
+    value: '84c5f8d6-c21b-49e6-8b88-bca28abb3d85'
+  - name: functionAppName
+    value: 'ai-bestrong-prod'
+  - name: vmImageName
+    value: 'ubuntu-latest'
+  - name: workingDirectory
+    value: '.'
 
 stages:
 - stage: Build
@@ -49,7 +54,7 @@ stages:
   jobs:
   - deployment: Deploy
     displayName: Deploy
-    environment: 'development'
+    environment: 'production'
     pool:
       vmImage: $(vmImageName)
 
@@ -61,7 +66,9 @@ stages:
           - task: AzureFunctionApp@1
             displayName: 'Azure functions app deploy'
             inputs:
-              azureSubscription: '$(azureSubscription)'
-              appType: functionAppLinux
-              appName: $(functionAppName)
+              azureSubscription: 'Azure for Students (85bd95c0-eabe-403c-87b6-f72ae70ec867)'
+              appType: 'functionAppLinux'
+              appName: 'ai-bestrong-prod'
               package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
+              runtimeStack: 'PYTHON|3.10'
+              appSettings: '-STORAGE_ACCOUNT_CONNECTION_STRIN $(STORAGE_ACCOUNT_CONNECTION_STRING) -DOCUMENTAI_ENDPOINT $(DOCUMENTAI_ENDPOINT) -DOCUMENTAI_KEY $(DOCUMENTAI_KEY)'
