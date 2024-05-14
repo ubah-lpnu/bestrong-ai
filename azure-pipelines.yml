@@ -6,7 +6,7 @@ variables:
   azureSubscription: '84c5f8d6-c21b-49e6-8b88-bca28abb3d85'
   functionAppName: 'ai-bestrong-prod'
   vmImageName: 'ubuntu-latest'
-  workingDirectory: './prod'
+  workingDirectory: '.'
 
 stages:
 - stage: Build
