@@ -10,7 +10,7 @@ variables:
     value: 'ubuntu-latest'
   - name: workingDirectory
     value: '.'
-  - group: settings-prod
+  - group: settings
   - name: env
     ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
       value: production
