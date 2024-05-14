@@ -1,17 +1,29 @@
 
 trigger:
 - main
+- dev
 
 variables:
-  - group: settings
   - name: azureSubscription
     value: '84c5f8d6-c21b-49e6-8b88-bca28abb3d85'
-  - name: functionAppName
-    value: 'ai-bestrong-prod'
   - name: vmImageName
     value: 'ubuntu-latest'
   - name: workingDirectory
     value: '.'
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    - group: settings-prod
+    - name: functionAppName
+      value: 'ai-bestrong'
+    - name: env
+      value: production
+
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
+    - group: settings
+    - name: functionAppName
+      value: 'ai-bestrong'
+    - name: env
+      value: development
+
 
 stages:
 - stage: Build
@@ -68,7 +80,7 @@ stages:
             inputs:
               azureSubscription: 'Azure for Students (85bd95c0-eabe-403c-87b6-f72ae70ec867)'
               appType: 'functionAppLinux'
-              appName: 'ai-bestrong-prod'
+              appName: '$(functionAppName)'
               package: '$(Pipeline.Workspace)/drop/$(Build.BuildId).zip'
               runtimeStack: 'PYTHON|3.10'
-              appSettings: '-STORAGE_ACCOUNT_CONNECTION_STRIN $(STORAGE_ACCOUNT_CONNECTION_STRING) -DOCUMENTAI_ENDPOINT $(DOCUMENTAI_ENDPOINT) -DOCUMENTAI_KEY $(DOCUMENTAI_KEY) -WEBSITE_RUN_FROM_PACKAGE 1'
+              appSettings: '-STORAGE_ACCOUNT_CONNECTION_STRIN $(STORAGE_ACCOUNT_CONNECTION_STRING) -DOCUMENTAI_ENDPOINT $(DOCUMENTAI_ENDPOINT) -DOCUMENTAI_KEY $(DOCUMENTAI_KEY) -WEBSITE_RUN_FROM_PACKAGE 1 -CONTAINER $(CONTAINER) -FILE_SHARE $(FILE_SHARE)'

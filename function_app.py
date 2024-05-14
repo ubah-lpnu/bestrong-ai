@@ -2,12 +2,13 @@ import azure.functions as func
 import logging
 from storage_handler import StorageHandler
 from document_ai_handler import DocumentAIHandler
+import os
 
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-file_share_name = "fsbestrongpdf"
-container_name = "bestrong-data"
+file_share_name = os.getenv("FILE_SHARE")
+container_name = os.getenv("CONTAINER")
 
 storage_handler = StorageHandler(file_share_name, container_name)
 document_ai_handler = DocumentAIHandler()
