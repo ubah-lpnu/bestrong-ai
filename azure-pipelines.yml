@@ -10,18 +10,21 @@ variables:
     value: 'ubuntu-latest'
   - name: workingDirectory
     value: '.'
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-    - group: settings-prod
-    - name: functionAppName
-      value: 'ai-bestrong'
-    - name: env
+  - group: settings-prod
+  - name: env
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
       value: production
-
-  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/dev') }}:
-    - group: settings
-    - name: functionAppName
+    ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
+      value: development
+  - name: functionAppName
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: 'ai-bestrong-prod'
+    ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
       value: 'ai-bestrong'
-    - name: env
+  - name: env
+    ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      value: production
+    ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
       value: development
 
 
